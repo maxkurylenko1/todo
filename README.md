@@ -8,7 +8,7 @@ This project is a classic ToDo application designed to demonstrate knowladge of 
 - Remove tasks from the list
 - Simple and intuitive user interface
 
-To run the project open terminal in root folder and run:
+How to run the project - open terminal in root folder and run:
 
 `npm run dev`
 
