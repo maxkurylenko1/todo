@@ -9,12 +9,12 @@ export const loadFromStorage = <T>(key: string): T | null => {
     }
   }
   return null;
-}
+};
 
 export const setToStorage = <T>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     console.error(`Error setting item in localStorage for key "${key}":`, error);
-  } 
-}
+  }
+};

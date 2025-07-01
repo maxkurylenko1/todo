@@ -1,0 +1,71 @@
+@font-face {
+  font-family: "Indie Flower";
+  font-weight: 600;
+  src: url("/font/Indie_Flower/IndieFlower-Regular.ttf") format("truetype");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 600;
+  src: url("/font/Roboto/Roboto-Regular.ttf") format("truetype");
+  font-style: normal;
+}
+
+.appContainer {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 0;
+  box-sizing: border-box;
+}
+
+.todoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f0f0f0;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Roboto", sans-serif;
+
+  @media (max-width: 900px) {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  @media (min-width: 1200px) {
+    // Extra large screens
+    padding: 2rem 3rem;
+    max-width: 1200px;
+  }
+}
+
+.appHeader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "Indie Flower", sans-serif;
+
+  .appTitle {
+    font-size: 4rem;
+    padding: 1rem 0;
+    color: #333;
+    font-weight: 800;
+  }
+
+  .restartAnimation {
+    display: flex;
+    cursor: pointer;
+    font-size: 50px;
+    height: 20px;
+  }
+}

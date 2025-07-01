@@ -5,28 +5,21 @@ import { ToDo } from "../../components/ToDo/ToDo";
 import { Button } from "../../components/Button/Button";
 
 interface ToDoListProps {
-    initialTodos: Todo[];
+  initialTodos: Todo[];
 }
 
 export const ToDoList = ({ initialTodos }: ToDoListProps): JSX.Element => {
-    const { todos, removeTodo, updateTodo } = useTodos(initialTodos);
+  const { todos, removeTodo, updateTodo } = useTodos(initialTodos);
 
-    return (
-        <div className="todoList">
-            <h2>To-Do List</h2>
-            <div className="todos">
-                {todos.map((todo) => (
-                    <ToDo
-                        key={todo.id}
-                        todo={todo}
-                        removeTodo={removeTodo}
-                        updatedTodo={updateTodo}
-                    />
-                ))}
-            </div>
-            <Button>
-                Add Todo
-            </Button>
-        </div>
-    );
-}
+  return (
+    <div className="todoList">
+      <h2>To-Do List</h2>
+      <div className="todos">
+        {todos.map((todo) => (
+          <ToDo key={todo.id} todo={todo} removeTodo={removeTodo} updatedTodo={updateTodo} />
+        ))}
+      </div>
+      <Button>Add Todo</Button>
+    </div>
+  );
+};
