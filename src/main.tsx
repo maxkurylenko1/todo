@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './styles/reset.css'
+import './styles/reset.scss'
 import App from './App.tsx'
 import { ToDoProvider } from './context/ToDoContext.tsx'
 

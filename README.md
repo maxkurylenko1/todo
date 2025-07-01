@@ -1,6 +1,6 @@
 # Simple ToDo App
 
-This project is a classic ToDo application designed to demonstrate knowladge of basic programming concepts. The app allows users to add, view, and remove tasks from a list. It serves as a showcase of understanding understand state management, user input handling, and dynamic rendering in a typical software project.
+This project is a classic ToDo application designed to demonstrate basic knowladge of JS, React, CSS. The app allows users to add, view, and remove tasks from a list. It is a showcase of understanding of state management, user input handling, dynamic rendering.
 
 **Features:**
 - Add new tasks to your list
