@@ -1,5 +1,6 @@
 import "./styles/app.scss";
 import SplitText from "./components/SplitText/SplitText";
+import { AddToDo } from "./features/AddToDo/AddToDo";
 
 function App() {
   return (
@@ -21,10 +22,7 @@ function App() {
           />
           <span className="restartAnimation">•</span>
         </header>
-        <p>Welcome to your To-Do List application!</p>
-        <p>Start managing your tasks efficiently.</p>
-        {/* Add your components here */}
-        {/* Example: <ToDoList /> */}
+        <AddToDo />
       </div>
     </div>
   );

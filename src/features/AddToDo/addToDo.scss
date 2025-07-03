@@ -1,0 +1,74 @@
+.addToDoContainer {
+  padding: 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 3px solid #ccc;
+  border-radius: 10px;
+  gap: 1rem;
+  font-family: "Roboto", sans-serif;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  &:hover {
+    border-color: #9e9e9e;
+    background-color: #fcfcfc;
+    transition: 100ms;
+  }
+
+  &:focus-within {
+    border-color: #9e9e9e;
+    background-color: #fcfcfc;
+    transition: 100ms;
+  }
+
+  .addIcon {
+    cursor: pointer;
+  }
+
+  .addToDoLabel {
+    font-size: 1.2rem;
+    font-style: medium;
+    color: #333;
+  }
+
+  .toDoInputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .toDoInput {
+    width: 100%;
+    padding: 0.2rem;
+    font-size: 1.2rem;
+    color: #333;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    outline: none;
+    background-color: transparent;
+
+    &:focus {
+      border-color: #9e9e9e;
+      background-color: #fcfcfc;
+      transition: 100ms;
+    }
+
+    &::placeholder {
+      color: #999;
+    }
+
+    @media (max-width: 500px) {
+      font-size: 1.1rem;
+    }
+  }
+}
