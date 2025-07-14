@@ -31,6 +31,11 @@
 
   .addIcon {
     cursor: pointer;
+    &:active {
+      transform: scale(0.86);
+      transition: 100ms;
+      box-shadow: none;
+    }
   }
 
   .addToDoLabel {

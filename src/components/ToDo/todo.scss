@@ -1,0 +1,27 @@
+.todoItem {
+  padding: 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 2px solid #bebebe;
+  border-radius: 10px;
+  gap: 1rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .todoActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}

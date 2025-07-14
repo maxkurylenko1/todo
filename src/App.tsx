@@ -1,6 +1,32 @@
 import "./styles/app.scss";
 import SplitText from "./components/SplitText/SplitText";
 import { AddToDo } from "./features/AddToDo/AddToDo";
+import { ToDoList } from "./features/ToDoList/ToDoList";
+import type { Todo } from "./types/todo";
+
+const initialTodos: Todo[] = [
+  {
+    id: "1",
+    title: "Learn React",
+    description: "Study the basics of React and build a simple app.",
+    completed: false,
+    createdAt: new Date(),
+  },
+  {
+    id: "2",
+    title: "Practice JavaScript",
+    description: "Work on JavaScript exercises to improve coding skills.",
+    completed: false,
+    createdAt: new Date(),
+  },
+  {
+    id: "3",
+    title: "Read a book",
+    description: "Finish reading 'The Pragmatic Programmer'.",
+    completed: false,
+    createdAt: new Date(),
+  },
+];
 
 function App() {
   return (
@@ -22,7 +48,10 @@ function App() {
           />
           <span className="restartAnimation">•</span>
         </header>
-        <AddToDo />
+        <main className="appMain">
+          <AddToDo />
+          <ToDoList initialTodos={initialTodos} />
+        </main>
       </div>
     </div>
   );

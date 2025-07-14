@@ -7,6 +7,7 @@ interface ToDoContextType {
   addTodo: (todo: Todo) => void;
   removeTodo: (id: string) => void;
   updateTodo: (updatedTodo: Todo) => void;
+  clearTodos: () => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
@@ -30,7 +31,12 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)));
   };
 
-  return <ToDoContext.Provider value={{ todos, addTodo, removeTodo, updateTodo }}>{children}</ToDoContext.Provider>;
+  const clearTodos = () => {
+    setTodos([]);
+    setToStorage("todos", []);
+  };
+
+  return <ToDoContext.Provider value={{ todos, addTodo, removeTodo, updateTodo, clearTodos }}>{children}</ToDoContext.Provider>;
 };
 
 export const useToDoContext = (): ToDoContextType => {
