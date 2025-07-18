@@ -3,32 +3,29 @@ import SplitText from "./components/SplitText/SplitText";
 import { AddToDo } from "./features/AddToDo/AddToDo";
 import { ToDoList } from "./features/ToDoList/ToDoList";
 import type { Todo } from "./types/todo";
-
-const initialTodos: Todo[] = [
-  {
-    id: "1",
-    title: "Learn React",
-    description: "Study the basics of React and build a simple app.",
-    completed: false,
-    createdAt: new Date(),
-  },
-  {
-    id: "2",
-    title: "Practice JavaScript",
-    description: "Work on JavaScript exercises to improve coding skills.",
-    completed: false,
-    createdAt: new Date(),
-  },
-  {
-    id: "3",
-    title: "Read a book",
-    description: "Finish reading 'The Pragmatic Programmer'.",
-    completed: false,
-    createdAt: new Date(),
-  },
-];
+import { useToDoContext } from "./context/ToDoContext";
 
 function App() {
+  const { todos, addTodo, removeTodo, updateTodo } = useToDoContext();
+
+  const handleAddClick = (todo: Todo, resetTodo: () => void) => {
+    if (!todo.text.trim()) {
+      return; // Prevent adding empty todos
+    }
+
+    const newTodo: Todo = {
+      ...todo,
+      title: "Task#", // Assuming title is the same as text for simplicity
+      id: crypto.randomUUID(),
+      createdAt: new Date(),
+    };
+    addTodo(newTodo);
+    resetTodo();
+
+    console.log("Todo added:", newTodo);
+    console.log("Current todos:", todos);
+  };
+
   return (
     <div className="appContainer">
       <div className="todoContainer">
@@ -49,8 +46,8 @@ function App() {
           <span className="restartAnimation">•</span>
         </header>
         <main className="appMain">
-          <AddToDo />
-          <ToDoList initialTodos={initialTodos} />
+          <AddToDo handleAddClick={handleAddClick} />
+          <ToDoList todos={todos} handleRemoveTodo={removeTodo} handleUpdateTodo={updateTodo} />
         </main>
       </div>
     </div>

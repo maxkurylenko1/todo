@@ -7,7 +7,7 @@
   width: 100%;
   border: 3px solid #ccc;
   border-radius: 10px;
-  gap: 1rem;
+  gap: 3rem;
   font-family: "Roboto", sans-serif;
 
   @media (max-width: 500px) {
@@ -29,18 +29,12 @@
     transition: 100ms;
   }
 
-  .addIcon {
-    cursor: pointer;
-    &:active {
-      transform: scale(0.86);
-      transition: 100ms;
-      box-shadow: none;
-    }
-  }
-
   .addToDoLabel {
     font-size: 1.2rem;
     font-style: medium;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: #333;
   }
 
@@ -48,8 +42,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     gap: 0.5rem;
-    flex: 1;
+  }
+
+  .toDoInputWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .buttonAdd {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #fff;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.86);
+      transition: 100ms;
+      box-shadow: none;
+    }
   }
 
   .toDoInput {
@@ -66,10 +84,6 @@
       border-color: #9e9e9e;
       background-color: #fcfcfc;
       transition: 100ms;
-    }
-
-    &::placeholder {
-      color: #999;
     }
 
     @media (max-width: 500px) {

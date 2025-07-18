@@ -20,7 +20,7 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [todos]);
 
   const addTodo = (todo: Todo) => {
-    setTodos((prevTodos) => [...prevTodos, todo]);
+    setTodos((prevTodos) => [todo, ...prevTodos]);
   };
 
   const removeTodo = (id: string) => {

@@ -1,22 +1,35 @@
 import "./todo.scss";
+import moment from "moment";
 import type { JSX } from "react";
 import type { Todo } from "../../types/todo";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { TiTickOutline } from "react-icons/ti";
+import { RxCross2 } from "react-icons/rx";
 
 interface ToDoProps {
   todo: Todo;
   removeTodo: (id: string) => void;
-  updatedTodo: (updatedTodo: Todo) => void;
+  updateTodo: (updatedTodo: Todo) => void;
 }
 
-export const ToDo = ({ todo, removeTodo, updatedTodo }: ToDoProps): JSX.Element => {
+export const ToDo = ({ todo, removeTodo, updateTodo }: ToDoProps): JSX.Element => {
   return (
     <div className="todoItem">
-      <h3>{todo.title}</h3>
-      <p>{todo.description}</p>
-      <div className="todoActions">
-        <button onClick={() => removeTodo(todo.id)}>Remove</button>
-        <button onClick={() => updatedTodo({ ...todo, completed: !todo.completed })}>{todo.completed ? "Mark as Incomplete" : "Mark as Complete"}</button>
+      <div>
+        <h3 className="todoTitle">
+          <span className="titleText">{`${todo.title}`}</span>
+        </h3>
+        <p className={`todoText ${todo.completed ? "completed" : ""}`}>{todo.text}</p>
       </div>
+      <div className="todoActions">
+        <button onClick={() => updateTodo({ ...todo, completed: !todo.completed })} className="iconButton">
+          {todo.completed ? <RxCross2 size={34} color="#e77e73ff" /> : <TiTickOutline size={34} color="#a0c774ff" />}
+        </button>
+        <button onClick={() => removeTodo(todo.id)} className="iconButton">
+          <FaRegTrashCan size={28} color="#6e6e6eff" />
+        </button>
+      </div>
+      <p className="createdAt">Created at: {`${moment(todo.createdAt).format("MMMM Do YYYY, h:mm a")}`}</p>
     </div>
   );
 };
