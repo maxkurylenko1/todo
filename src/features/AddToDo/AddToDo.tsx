@@ -30,18 +30,18 @@ export const AddToDo = ({ handleAddClick }: AddToDoProps): JSX.Element => {
   return (
     <div className="addToDoContainer">
       <div className="toDoInputWrapper">
-        {/* <div>
+        <div className="toDoTaskNameWrapper">
           <label className="addToDoLabel">Task name:</label>
           <div className="toDoInputContainer">
             <input type="text" value={todo.text} className="toDoInput" onChange={handleInputChange} />
           </div>
-        </div> */}
-        {/* <div> */}
-        <label className="addToDoLabel">Text:</label>
-        <div className="toDoInputContainer">
-          <input type="text" value={todo.text} className="toDoInput" onChange={handleInputChange} />
         </div>
-        {/* </div> */}
+        <div>
+          <label className="addToDoLabel">Text:</label>
+          <div className="toDoInputContainer">
+            <input type="text" value={todo.text} className="toDoInput" onChange={handleInputChange} />
+          </div>
+        </div>
       </div>
       <button className="buttonAdd" onClick={() => handleAddClick(todo, resetTodo)}>
         <FaRegPlusSquare size={30} color="#2b2b2b" />
