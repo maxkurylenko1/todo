@@ -5,12 +5,18 @@ import { AddToDo } from "./features/AddToDo/AddToDo";
 import { ToDoList } from "./features/ToDoList/ToDoList";
 import type { Todo } from "./types/todo";
 import { useToDoContext } from "./context/ToDoContext";
-import { useState } from "react";
-import { Settings } from "./components/Settings/Settings";
-
+import { Settings } from "./features/Settings/Settings";
 function App() {
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const { todos, addTodo, removeTodo, updateTodo } = useToDoContext();
+  const {
+    todos,
+    addTodo,
+    removeTodo,
+    updateTodo,
+    setIsAddTodoModalOpen,
+    setIsSettingsModalOpen,
+    isAddTodoModalOpen,
+    isSettingsModalOpen,
+  } = useToDoContext();
 
   const handleAddClick = (todo: Todo, resetTodo: () => void) => {
     if (!todo.text.trim()) {
@@ -22,27 +28,30 @@ function App() {
       id: crypto.randomUUID(),
       createdAt: new Date(),
     };
+
     addTodo(newTodo);
     resetTodo();
-
-    console.log("Todo added:", newTodo);
-    console.log("Current todos:", todos);
   };
 
   const handleSettingsClick = () => {
-    setIsSettingsModalOpen((prev) => !prev);
+    setIsSettingsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const handleAddTodoClick = () => {
+    setIsAddTodoModalOpen(true);
+  };
+
+  const closeSettingsModal = () => {
     setIsSettingsModalOpen(false);
   };
 
-  const handleSaveSettings = () => {
-    // Implement settings save logic here
-    console.log("Settings saved");
-    closeModal();
+  const closeAddTodoModal = () => {
+    setIsAddTodoModalOpen(false);
   };
 
+  const handleSaveSettings = () => {
+    closeSettingsModal();
+  };
   return (
     <div className="appContainer">
       <div className="todoContainer">
@@ -61,11 +70,23 @@ function App() {
             textAlign="center"
           />
           <span className="restartAnimation">•</span>
-          <DiAptana size={35} color="#696969ff" className="toDoSettings" onClick={handleSettingsClick} />
-          <Settings isModalOpen={isSettingsModalOpen} closeModal={closeModal} handleSaveSettings={handleSaveSettings} />
+          <DiAptana
+            size={35}
+            color="#696969ff"
+            className="toDoSettings"
+            onClick={handleSettingsClick}
+          />
         </header>
         <main className="appMain">
-          <AddToDo handleAddClick={handleAddClick} />
+          {isSettingsModalOpen && (
+            <Settings closeModal={closeSettingsModal} handleSaveSettings={handleSaveSettings} />
+          )}
+          <AddToDo
+            closeModal={closeAddTodoModal}
+            isAddTodoModalOpen={isAddTodoModalOpen}
+            handleSaveTodoClick={handleAddClick}
+            onAddTodoClick={handleAddTodoClick}
+          />
           <ToDoList todos={todos} handleRemoveTodo={removeTodo} handleUpdateTodo={updateTodo} />
         </main>
       </div>

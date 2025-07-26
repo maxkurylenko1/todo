@@ -8,12 +8,18 @@ interface ToDoContextType {
   removeTodo: (id: string) => void;
   updateTodo: (updatedTodo: Todo) => void;
   clearTodos: () => void;
+  isSettingsModalOpen: boolean;
+  isAddTodoModalOpen: boolean;
+  setIsSettingsModalOpen: (open: boolean) => void;
+  setIsAddTodoModalOpen: (open: boolean) => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
 
 export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>(() => loadFromStorage<Todo[]>("todos") || []);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
+  const [isAddTodoModalOpen, setIsAddTodoModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setToStorage("todos", todos);
@@ -28,7 +34,9 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateTodo = (updatedTodo: Todo) => {
-    setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)));
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+    );
   };
 
   const clearTodos = () => {
@@ -36,7 +44,23 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToStorage("todos", []);
   };
 
-  return <ToDoContext.Provider value={{ todos, addTodo, removeTodo, updateTodo, clearTodos }}>{children}</ToDoContext.Provider>;
+  return (
+    <ToDoContext.Provider
+      value={{
+        todos,
+        addTodo,
+        removeTodo,
+        updateTodo,
+        clearTodos,
+        isSettingsModalOpen,
+        isAddTodoModalOpen,
+        setIsSettingsModalOpen,
+        setIsAddTodoModalOpen,
+      }}
+    >
+      {children}
+    </ToDoContext.Provider>
+  );
 };
 
 export const useToDoContext = (): ToDoContextType => {

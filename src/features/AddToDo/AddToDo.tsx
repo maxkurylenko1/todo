@@ -2,9 +2,13 @@ import "./addToDo.scss";
 import { useState, type JSX } from "react";
 import { FaRegPlusSquare } from "react-icons/fa";
 import type { Todo } from "../../types/todo";
+import { ToDoModal } from "../../components/ToDoModal/ToDoModal";
 
 interface AddToDoProps {
-  handleAddClick: (todo: Todo, resetTodo: () => void) => void;
+  handleSaveTodoClick: (todo: Todo, resetTodo: () => void) => void;
+  isAddTodoModalOpen: boolean;
+  closeModal: () => void; // Optional prop for closing the modal
+  onAddTodoClick: () => void; // Optional prop for additional actions on add click
 }
 
 const initialState: Todo = {
@@ -15,36 +19,42 @@ const initialState: Todo = {
   createdAt: new Date(),
 };
 
-export const AddToDo = ({ handleAddClick }: AddToDoProps): JSX.Element => {
+export const AddToDo = ({
+  // handleSaveTodoClick,
+  isAddTodoModalOpen,
+  closeModal,
+  onAddTodoClick,
+}: AddToDoProps): JSX.Element => {
   const [todo, setTodo] = useState<Todo>(initialState);
+  // const {  handleSaveTodoClick } = useToDoContext();
 
-  const resetTodo = () => {
-    setTodo(initialState);
-  };
+  // const resetTodo = () => {
+  //   setTodo(initialState);
+  // };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    setTodo((prev) => ({ ...prev, text: value }));
+    const { value, name } = e.target;
+    if (name === "taskTitle") {
+      setTodo((prev) => ({ ...prev, title: value }));
+    }
+    if (name === "taskText") {
+      setTodo((prev) => ({ ...prev, text: value }));
+    }
   };
 
   return (
     <div className="addToDoContainer">
-      <div className="toDoInputWrapper">
-        <div className="toDoTaskNameWrapper">
-          <label className="addToDoLabel">Task name:</label>
-          <div className="toDoInputContainer">
-            <input type="text" value={todo.text} className="toDoInput" onChange={handleInputChange} />
-          </div>
-        </div>
-        <div>
-          <label className="addToDoLabel">Text:</label>
-          <div className="toDoInputContainer">
-            <input type="text" value={todo.text} className="toDoInput" onChange={handleInputChange} />
-          </div>
-        </div>
-      </div>
-      <button className="buttonAdd" onClick={() => handleAddClick(todo, resetTodo)}>
-        <FaRegPlusSquare size={30} color="#2b2b2b" />
+      <p className="addToDoTitle">Add ToDo</p>
+      {isAddTodoModalOpen && (
+        <ToDoModal
+          closeModal={closeModal}
+          todo={todo}
+          handleInputChange={handleInputChange}
+          modalTitle="Add ToDo"
+        />
+      )}
+      <button className="buttonAdd" onClick={() => onAddTodoClick()}>
+        <FaRegPlusSquare size={40} color="#2b2b2b" className="buttonAddIcon" />
       </button>
     </div>
   );
