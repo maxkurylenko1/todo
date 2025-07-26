@@ -12,7 +12,7 @@
   font-weight: 600;
   position: relative;
 
-  @media (max-width: 500px) {
+  @media (max-width: 550px) {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
@@ -20,7 +20,7 @@
   }
 
   @media (max-width: 550px) {
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
   }
 
   .todoActions {
@@ -30,27 +30,14 @@
     align-items: center;
     gap: 0.5rem;
 
-    @media (max-width: 500px) {
+    @media (max-width: 550px) {
       width: 100%;
       gap: 1.5rem;
+      align-items: flex-start;
     }
   }
 
   .createdAt {
-    position: absolute;
-    font-size: 0.8rem;
-    color: #666;
-    width: 250px;
-    right: 15px;
-    bottom: 5px;
-    text-align: right;
-
-    @media (max-width: 550px) {
-      bottom: 26px;
-    }
-  }
-
-  .deadline {
     position: absolute;
     font-size: 0.8rem;
     color: #666;
@@ -60,10 +47,32 @@
     text-align: left;
 
     @media (max-width: 550px) {
-      bottom: 5px;
-      right: 15px;
+      // bottom: 22px;
+      text-align: center;
+      width: 100%;
       left: unset;
-      text-align: right;
+      bottom: unset;
+      position: static;
+    }
+  }
+
+  .deadline {
+    position: absolute;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: 250px;
+    right: 15px;
+    bottom: 5px;
+    text-align: right;
+
+    @media (max-width: 550px) {
+      // left: 24px;
+      // bottom: 5px;
+      text-align: center;
+      width: 100%;
+      left: unset;
+      bottom: unset;
+      position: static;
     }
   }
 
@@ -75,6 +84,12 @@
     background: none;
     border: none;
     cursor: pointer;
+  }
+
+  .tooltipContainer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .completed {
@@ -102,13 +117,13 @@
 }
 
 .low {
-  background-color: #4caf4f59;
+  background-color: #71ad732f;
 }
 .medium {
-  background-color: #ff99003f;
+  background-color: #ebb96f3b;
 }
 .high {
-  background-color: #f4433642;
+  background-color: #f1756c25;
 }
 
 .priority {

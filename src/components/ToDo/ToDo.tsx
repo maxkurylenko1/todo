@@ -4,8 +4,8 @@ import type { JSX } from "react";
 import type { Todo } from "../../types/todo";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { MdOutlineEdit } from "react-icons/md";
-import { TiTickOutline } from "react-icons/ti";
-import { RxCross2 } from "react-icons/rx";
+import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import { MdCheckBox } from "react-icons/md";
 
 interface ToDoProps {
   todo: Todo;
@@ -36,9 +36,9 @@ export const ToDo = ({ todo, removeTodo, updateTodo }: ToDoProps): JSX.Element =
           className="iconButton"
         >
           {todo.completed ? (
-            <TiTickOutline size={34} color="#a0c774ff" />
+            <MdCheckBox size={32} color="#a0c774ff" />
           ) : (
-            <RxCross2 size={34} color="#e77e73ff" />
+            <MdOutlineCheckBoxOutlineBlank size={32} color="rgb(110, 110, 110)" />
           )}
         </button>
         <button onClick={() => removeTodo(todo.id)} className="iconButton">
@@ -46,11 +46,11 @@ export const ToDo = ({ todo, removeTodo, updateTodo }: ToDoProps): JSX.Element =
         </button>
       </div>
       <p className="createdAt">
-        Created at: {`${moment(todo.createdAt).format("MMMM Do YYYY, h:mm a")}`}
+        Created at: {`${moment(todo.createdAt).format("MMM Do YYYY, h:mm a")}`}
       </p>
       {todo.dueDate && (
         <p className="deadline">
-          Deadline: {`${moment(todo.dueDate).format("MMMM Do YYYY, h:mm a")}`}
+          Deadline: {`${moment(todo.dueDate).format("MMM Do YYYY, h:mm a")}`}
         </p>
       )}
       {todo.priority && (
