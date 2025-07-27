@@ -6,6 +6,7 @@ import { ToDoList } from "./features/ToDoList/ToDoList";
 import type { Todo } from "./types/todo";
 import { useToDoContext } from "./context/ToDoContext";
 import { Settings } from "./features/Settings/Settings";
+
 function App() {
   const {
     todos,
@@ -18,10 +19,12 @@ function App() {
     isSettingsModalOpen,
   } = useToDoContext();
 
-  const handleAddClick = (todo: Todo, resetTodo: () => void) => {
+  const handleSaveToDoClick = (todo: Todo, resetTodo: () => void) => {
     if (!todo.text.trim()) {
       return; // Prevent adding empty todos
     }
+
+    console.log(todo);
 
     const newTodo: Todo = {
       ...todo,
@@ -31,13 +34,14 @@ function App() {
 
     addTodo(newTodo);
     resetTodo();
+    closeAddTodoModal();
   };
 
   const handleSettingsClick = () => {
     setIsSettingsModalOpen(true);
   };
 
-  const handleAddTodoClick = () => {
+  const handleAddTodoIconClick = () => {
     setIsAddTodoModalOpen(true);
   };
 
@@ -49,9 +53,6 @@ function App() {
     setIsAddTodoModalOpen(false);
   };
 
-  const handleSaveSettings = () => {
-    closeSettingsModal();
-  };
   return (
     <div className="appContainer">
       <div className="todoContainer">
@@ -78,14 +79,12 @@ function App() {
           />
         </header>
         <main className="appMain">
-          {isSettingsModalOpen && (
-            <Settings closeModal={closeSettingsModal} handleSaveSettings={handleSaveSettings} />
-          )}
+          {isSettingsModalOpen && <Settings closeModal={closeSettingsModal} />}
           <AddToDo
             closeModal={closeAddTodoModal}
             isAddTodoModalOpen={isAddTodoModalOpen}
-            handleSaveTodoClick={handleAddClick}
-            onAddTodoClick={handleAddTodoClick}
+            onSaveTodoClick={handleSaveToDoClick}
+            onAddTodoIconClick={handleAddTodoIconClick}
           />
           <ToDoList todos={todos} handleRemoveTodo={removeTodo} handleUpdateTodo={updateTodo} />
         </main>

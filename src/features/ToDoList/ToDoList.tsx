@@ -9,11 +9,20 @@ interface ToDoListProps {
   handleUpdateTodo: (updatedTodo: Todo) => void;
 }
 
-export const ToDoList = ({ todos, handleRemoveTodo, handleUpdateTodo }: ToDoListProps): JSX.Element => {
+export const ToDoList = ({
+  todos,
+  handleRemoveTodo,
+  handleUpdateTodo,
+}: ToDoListProps): JSX.Element => {
   return (
     <div className="todoList">
       {todos.map((todo) => (
-        <ToDo key={todo.id} todo={todo} removeTodo={handleRemoveTodo} updateTodo={handleUpdateTodo} />
+        <ToDo
+          key={todo.id}
+          todo={todo}
+          removeTodo={handleRemoveTodo}
+          updateTodo={handleUpdateTodo}
+        />
       ))}
     </div>
   );
