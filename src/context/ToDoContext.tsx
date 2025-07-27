@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Todo } from "../types/todo";
+import type { SettingsType } from "../types/settings";
 import { loadFromStorage, setToStorage } from "../utils/getFromLocalStorage";
 
 interface ToDoContextType {
@@ -12,6 +13,8 @@ interface ToDoContextType {
   isAddTodoModalOpen: boolean;
   setIsSettingsModalOpen: (open: boolean) => void;
   setIsAddTodoModalOpen: (open: boolean) => void;
+  settings: SettingsType;
+  updateSettings: (settings: SettingsType) => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
@@ -20,10 +23,22 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [todos, setTodos] = useState<Todo[]>(() => loadFromStorage<Todo[]>("todos") || []);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   const [isAddTodoModalOpen, setIsAddTodoModalOpen] = useState<boolean>(false);
+  const [settings, setSettings] = useState<SettingsType>(
+    () =>
+      loadFromStorage<SettingsType>("settings") || {
+        isDueDateActive: true,
+        isPriorityActive: true,
+        isTitleActive: true,
+      }
+  );
 
   useEffect(() => {
     setToStorage("todos", todos);
   }, [todos]);
+
+  useEffect(() => {
+    setToStorage("settings", settings);
+  }, [settings]);
 
   const addTodo = (todo: Todo) => {
     setTodos((prevTodos) => [todo, ...prevTodos]);
@@ -44,6 +59,10 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToStorage("todos", []);
   };
 
+  const updateSettings = (settings: SettingsType) => {
+    setSettings(settings);
+  };
+
   return (
     <ToDoContext.Provider
       value={{
@@ -56,6 +75,8 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAddTodoModalOpen,
         setIsSettingsModalOpen,
         setIsAddTodoModalOpen,
+        settings,
+        updateSettings,
       }}
     >
       {children}
