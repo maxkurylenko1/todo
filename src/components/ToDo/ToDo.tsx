@@ -10,31 +10,33 @@ import { MdCheckBox } from "react-icons/md";
 interface ToDoProps {
   todo: Todo;
   removeTodo: (id: string) => void;
-  updateTodo: (updatedTodo: Todo) => void;
+  setToDoComplete: (id: string) => void;
+  onEditIconClick: (id: string) => void;
 }
 
-export const ToDo = ({ todo, removeTodo, updateTodo }: ToDoProps): JSX.Element => {
+export const ToDo = ({
+  todo,
+  removeTodo,
+  setToDoComplete,
+  onEditIconClick,
+}: ToDoProps): JSX.Element => {
   return (
     <div className={`${todo.completed ? "completedTodo" : ""} todoItem ${todo.priority}`}>
       <div>
-        <h3 className="todoTitle">
-          <span
-            className={`${todo.completed ? "completed" : ""} titleText`}
-          >{`${todo.title}`}</span>
-        </h3>
+        {todo.title && (
+          <h3 className="todoTitle">
+            <span className={`${todo.completed ? "completed" : ""} titleText`}>
+              {`${todo.title}`}
+            </span>
+          </h3>
+        )}
         <p className={`todoText ${todo.completed ? "completed" : ""}`}>{todo.text}</p>
       </div>
       <div className="todoActions">
-        <button
-          onClick={() => updateTodo({ ...todo, completed: !todo.completed })}
-          className="iconButton"
-        >
+        <button onClick={() => onEditIconClick(todo.id)} className="iconButton">
           <MdOutlineEdit size={28} color="#6e6e6eff" />
         </button>
-        <button
-          onClick={() => updateTodo({ ...todo, completed: !todo.completed })}
-          className="iconButton"
-        >
+        <button onClick={() => setToDoComplete(todo.id)} className="iconButton">
           {todo.completed ? (
             <MdCheckBox size={32} color="#a0c774ff" />
           ) : (

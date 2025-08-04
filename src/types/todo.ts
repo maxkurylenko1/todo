@@ -1,3 +1,5 @@
+import type { SettingsType } from "./settings";
+
 export type Todo = {
   id: string;
   title?: string;
@@ -5,5 +7,6 @@ export type Todo = {
   completed: boolean;
   createdAt: Date;
   dueDate?: Date;
-  priority?: "low" | "medium" | "high";
+  priority?: "low" | "medium" | "high" | "non";
+  settings: SettingsType;
 };

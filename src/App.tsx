@@ -3,39 +3,22 @@ import SplitText from "./components/SplitText/SplitText";
 import { DiAptana } from "react-icons/di";
 import { AddToDo } from "./features/AddToDo/AddToDo";
 import { ToDoList } from "./features/ToDoList/ToDoList";
-import type { Todo } from "./types/todo";
 import { useToDoContext } from "./context/ToDoContext";
 import { Settings } from "./features/Settings/Settings";
 
 function App() {
   const {
     todos,
-    addTodo,
+    saveTodo,
     removeTodo,
     updateTodo,
     setIsAddTodoModalOpen,
     setIsSettingsModalOpen,
     isAddTodoModalOpen,
     isSettingsModalOpen,
+    isEditTodoModalOpen,
+    editToDoModalOpen,
   } = useToDoContext();
-
-  const handleSaveToDoClick = (todo: Todo, resetTodo: () => void) => {
-    if (!todo.text.trim()) {
-      return; // Prevent adding empty todos
-    }
-
-    console.log(todo);
-
-    const newTodo: Todo = {
-      ...todo,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-    };
-
-    addTodo(newTodo);
-    resetTodo();
-    closeAddTodoModal();
-  };
 
   const handleSettingsClick = () => {
     setIsSettingsModalOpen(true);
@@ -47,10 +30,6 @@ function App() {
 
   const closeSettingsModal = () => {
     setIsSettingsModalOpen(false);
-  };
-
-  const closeAddTodoModal = () => {
-    setIsAddTodoModalOpen(false);
   };
 
   return (
@@ -81,12 +60,17 @@ function App() {
         <main className="appMain">
           {isSettingsModalOpen && <Settings closeModal={closeSettingsModal} />}
           <AddToDo
-            closeModal={closeAddTodoModal}
             isAddTodoModalOpen={isAddTodoModalOpen}
-            onSaveTodoClick={handleSaveToDoClick}
+            onSaveTodoClick={saveTodo}
             onAddTodoIconClick={handleAddTodoIconClick}
           />
-          <ToDoList todos={todos} handleRemoveTodo={removeTodo} handleUpdateTodo={updateTodo} />
+          <ToDoList
+            todos={todos}
+            handleRemoveTodo={removeTodo}
+            handleUpdateTodo={updateTodo}
+            editTodoIconClick={editToDoModalOpen}
+            isEditTodoModalOpen={isEditTodoModalOpen}
+          />
         </main>
       </div>
     </div>
