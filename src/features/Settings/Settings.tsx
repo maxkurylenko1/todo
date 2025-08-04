@@ -3,18 +3,17 @@ import { Modal } from "../../components/Modal/Modal";
 import type { SettingsType } from "../../types/settings";
 import { useState } from "react";
 import { useToDoContext } from "../../context/ToDoContext";
+import Switch from "react-switch";
 
 interface SettingsProps {
   closeModal: () => void;
 }
 
 export const Settings = ({ closeModal }: SettingsProps) => {
-  const { updateSettings, settings } = useToDoContext();
-  const [currentSettings, setCurrentSettings] = useState<SettingsType>(settings);
+  const { updateSettings, addToDosettings } = useToDoContext();
+  const [currentSettings, setCurrentSettings] = useState<SettingsType>(addToDosettings);
 
-  const handleInputChage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-
+  const handleInputChage = (checked: boolean, name: string) => {
     setCurrentSettings((prevSettings) => ({ ...prevSettings, [name]: checked }));
   };
 
@@ -26,36 +25,36 @@ export const Settings = ({ closeModal }: SettingsProps) => {
   return (
     <Modal onClose={closeModal} onSave={handleSaveSettings}>
       <div className="modalContent">
-        <h2>ToDo Settings</h2>
+        <h2>Create ToDo Settings</h2>
         <ul>
           <li>
             Title{" "}
-            <input
-              className="checkbox"
+            <Switch
               checked={currentSettings.isTitleActive}
-              type="checkbox"
-              name="isTitleActive"
-              onChange={handleInputChage}
+              onChange={(checked) => handleInputChage(checked, "isTitleActive")}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              onColor="#62c465ff"
             />
           </li>
           <li>
             Due date{" "}
-            <input
-              className="checkbox"
+            <Switch
               checked={currentSettings.isDueDateActive}
-              type="checkbox"
-              name="isDueDateActive"
-              onChange={handleInputChage}
+              onChange={(checked) => handleInputChage(checked, "isDueDateActive")}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              onColor="#62c465ff"
             />
           </li>
           <li>
             Priority{" "}
-            <input
-              className="checkbox"
+            <Switch
               checked={currentSettings.isPriorityActive}
-              type="checkbox"
-              name="isPriorityActive"
-              onChange={handleInputChage}
+              onChange={(checked) => handleInputChage(checked, "isPriorityActive")}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              onColor="#62c465ff"
             />
           </li>
         </ul>
