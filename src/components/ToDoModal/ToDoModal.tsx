@@ -1,29 +1,82 @@
 import "./toDoModal.scss";
 import { Modal } from "../Modal/Modal";
-import type { SettingsType } from "../../types/settings";
-import type { TodoExtanded } from "../../features/AddToDo/AddToDo";
+import type { Todo } from "../../types/todo";
+import { useToDoContext } from "../../context/ToDoContext";
+import { useState } from "react";
 
 interface ToDoModalProps {
-  closeModal: () => void;
-  todo: TodoExtanded;
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>
-  ) => void;
   modalTitle: string;
-  settings: SettingsType;
-  handleSaveTodoClick: () => void;
+  isEditMode: boolean;
 }
 
-export const ToDoModal = ({
-  closeModal,
-  todo,
-  handleChange,
-  modalTitle,
-  settings,
-  handleSaveTodoClick,
-}: ToDoModalProps) => {
+export const ToDoModal = ({ modalTitle, isEditMode }: ToDoModalProps) => {
+  const {
+    inputErrors,
+    updateModalToDo,
+    closeTodoModal,
+    modalTodo,
+    addToDosettings,
+    saveTodo,
+    filterInputErrors,
+  } = useToDoContext();
+
+  const initialTodo: Todo = {
+    id: "",
+    text: "",
+    completed: false,
+    createdAt: new Date(),
+    settings: addToDosettings,
+  };
+
+  const [currentToDo, setCurrentToDo] = useState<Todo>(() =>
+    isEditMode ? modalTodo : initialTodo
+  );
+
+  console.log("Current ToDo:", currentToDo);
+
+  const settings = isEditMode ? modalTodo.settings : addToDosettings;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    filterInputErrors(name);
+
+    setCurrentToDo((prevTodo) => ({
+      ...prevTodo,
+      [name]: value,
+    }));
+  };
+
+  const handleToDoSave = () => {
+    if (isEditMode) {
+      updateModalToDo(currentToDo, resetToDo);
+    } else {
+      saveTodo(currentToDo, resetToDo);
+    }
+  };
+
+  const closeModal = () => {
+    closeTodoModal(resetToDo, isEditMode);
+  };
+
+  const resetToDo = () => {
+    setCurrentToDo({
+      id: "",
+      text: "",
+      completed: false,
+      createdAt: new Date(),
+      settings: {
+        isDueDateActive: false,
+        isPriorityActive: false,
+        isTitleActive: false,
+      },
+    });
+  };
+
   return (
-    <Modal onClose={closeModal} onSave={handleSaveTodoClick}>
+    <Modal onClose={closeModal} onSave={handleToDoSave}>
       <div className="addToDoWrapper">
         <h2 className="modalTitle">{modalTitle}</h2>
         {settings.isTitleActive && (
@@ -31,9 +84,9 @@ export const ToDoModal = ({
             <p className="addToDoTitle">Task name:</p>
             <input
               type="text"
-              value={todo.title}
+              value={currentToDo.title?.length ? currentToDo.title : ""}
               name="title"
-              className="toDoInput"
+              className={inputErrors.includes("title") ? "toDoInput required" : "toDoInput"}
               onChange={handleChange}
             />
           </div>
@@ -42,9 +95,9 @@ export const ToDoModal = ({
           <p className="addToDoLabel">Text:</p>
           <input
             type="text"
-            value={todo.text}
+            value={currentToDo.text}
             name="text"
-            className="toDoInput"
+            className={`toDoInput ${inputErrors.includes("text") ? "required" : ""}`}
             onChange={handleChange}
           />
         </div>
@@ -52,8 +105,19 @@ export const ToDoModal = ({
           {settings.isDueDateActive && (
             <div className="toDoOption">
               <p>Deadline</p>
-              <input type="date" name="dueDate" className="dueDate" onChange={handleChange} />
-              <input type="time" name="dueTime" className="dueDate" onChange={handleChange} />
+              <input
+                type="datetime-local"
+                value={
+                  currentToDo.dueDate
+                    ? currentToDo.dueDate instanceof Date
+                      ? currentToDo.dueDate.toISOString().slice(0, 10)
+                      : currentToDo.dueDate
+                    : ""
+                }
+                name="dueDate"
+                className={`toDoInput ${inputErrors.includes("dueDate") ? "required" : ""}`}
+                onChange={handleChange}
+              />
             </div>
           )}
           {settings.isPriorityActive && (
@@ -61,13 +125,15 @@ export const ToDoModal = ({
               <p>Priority</p>
               <select
                 name="priority"
-                value={todo.priority}
-                className="prioritySelect"
+                value={currentToDo.priority}
+                className={`prioritySelect ${inputErrors.includes("priority") ? "required" : ""}`}
                 onChange={handleChange}
               >
-                <option value="non" defaultChecked hidden>
-                  Select priority
-                </option>
+                {!currentToDo.priority && (
+                  <option value="non" defaultChecked hidden>
+                    Select priority
+                  </option>
+                )}
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>

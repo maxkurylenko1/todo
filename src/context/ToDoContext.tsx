@@ -11,10 +11,20 @@ interface ToDoContextType {
   clearTodos: () => void;
   isSettingsModalOpen: boolean;
   isAddTodoModalOpen: boolean;
-  setIsSettingsModalOpen: (open: boolean) => void;
-  setIsAddTodoModalOpen: (open: boolean) => void;
-  settings: SettingsType;
+  setIsSettingsModalOpen: (isOpen: boolean) => void;
+  setIsAddTodoModalOpen: (isOpen: boolean) => void;
+  addToDosettings: SettingsType;
   updateSettings: (settings: SettingsType) => void;
+  isEditTodoModalOpen: boolean;
+  setIsEditTodoModalOpen: (isModalOpen: boolean) => void;
+  inputErrors: string[];
+  closeTodoModal: (resetToDo: () => void, isEditMode: boolean) => void;
+  setToDoComplete: (id: string) => void;
+  updateModalToDo: (todo: Todo, resetEditToDo: () => void) => void;
+  modalTodo: Todo;
+  saveTodo: (todo: Todo, resetTodo: () => void) => void;
+  editToDoModalOpen: (id: string) => void;
+  filterInputErrors: (inputName: string) => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
@@ -23,7 +33,19 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [todos, setTodos] = useState<Todo[]>(() => loadFromStorage<Todo[]>("todos") || []);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   const [isAddTodoModalOpen, setIsAddTodoModalOpen] = useState<boolean>(false);
-  const [settings, setSettings] = useState<SettingsType>(
+  const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState<boolean>(false);
+  const [modalTodo, setModalTodo] = useState<Todo>({
+    id: "",
+    text: "",
+    completed: false,
+    createdAt: new Date(),
+    settings: {
+      isDueDateActive: false,
+      isPriorityActive: false,
+      isTitleActive: false,
+    },
+  });
+  const [addToDosettings, setAddToDosettings] = useState<SettingsType>(
     () =>
       loadFromStorage<SettingsType>("settings") || {
         isDueDateActive: true,
@@ -31,14 +53,15 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isTitleActive: true,
       }
   );
+  const [inputErrors, setInputErrors] = useState<string[]>([]);
 
   useEffect(() => {
     setToStorage("todos", todos);
   }, [todos]);
 
   useEffect(() => {
-    setToStorage("settings", settings);
-  }, [settings]);
+    setToStorage("settings", addToDosettings);
+  }, [addToDosettings]);
 
   const addTodo = (todo: Todo) => {
     setTodos((prevTodos) => [todo, ...prevTodos]);
@@ -60,7 +83,107 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateSettings = (settings: SettingsType) => {
-    setSettings(settings);
+    setAddToDosettings(settings);
+  };
+
+  const closeTodoModal = (resetToDo: () => void, isEditMode: boolean) => {
+    if (isEditMode) {
+      setIsEditTodoModalOpen(false);
+    } else {
+      setIsAddTodoModalOpen(false);
+    }
+    resetToDo();
+    setInputErrors([]); // Clear input errors when closing the modal
+  };
+
+  const setToDoComplete = (id: string) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+    );
+  };
+
+  const updateModalToDo = (todo: Todo, resetToDo: () => void) => {
+    const errors: string[] = [];
+
+    if (todo.settings.isTitleActive && !todo.title?.trim()) {
+      errors.push("title");
+    }
+
+    if (!todo.text.trim()) {
+      errors.push("text");
+    }
+
+    if (todo.settings.isDueDateActive && !todo.dueDate) {
+      errors.push("dueDate");
+    }
+
+    if (todo.settings.isPriorityActive && !todo.priority) {
+      errors.push("priority");
+    }
+
+    if (errors.length > 0) {
+      setInputErrors(errors);
+      return; // Do not save if there are input errors
+    }
+
+    updateTodo(todo);
+    resetToDo();
+    setInputErrors([]);
+    setIsEditTodoModalOpen(false);
+  };
+
+  const saveTodo = (todo: Todo, resetTodo: () => void) => {
+    const errors: string[] = [];
+
+    if (todo.settings.isTitleActive && !todo.title?.trim()) {
+      errors.push("title");
+    }
+
+    if (!todo.text.trim()) {
+      errors.push("text");
+    }
+
+    if (todo.settings.isDueDateActive && !todo.dueDate) {
+      errors.push("dueDate");
+    }
+
+    if (todo.settings.isPriorityActive && !todo.priority) {
+      errors.push("priority");
+    }
+
+    if (errors.length > 0) {
+      setInputErrors(errors);
+      return; // Do not save if there are input errors
+    }
+
+    const newTodo: Todo = {
+      ...todo,
+      id: crypto.randomUUID(),
+      createdAt: new Date(),
+      settings: addToDosettings,
+    };
+
+    addTodo(newTodo);
+    resetTodo(); // Reset the current todo state
+    setInputErrors([]); // Clear input errors after saving
+    setIsAddTodoModalOpen(false);
+  };
+
+  const editToDoModalOpen = async (id: string) => {
+    setModalTodo((prevState) => {
+      const todoToEdit = todos.find((todo) => todo.id === id);
+      return todoToEdit ? { ...todoToEdit } : prevState;
+    });
+  };
+
+  useEffect(() => {
+    if (modalTodo.id) {
+      setIsEditTodoModalOpen(true);
+    }
+  }, [modalTodo]);
+
+  const filterInputErrors = (inputName: string) => {
+    setInputErrors(inputErrors.filter((error) => error !== inputName));
   };
 
   return (
@@ -75,8 +198,18 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAddTodoModalOpen,
         setIsSettingsModalOpen,
         setIsAddTodoModalOpen,
-        settings,
+        addToDosettings,
         updateSettings,
+        isEditTodoModalOpen,
+        setIsEditTodoModalOpen,
+        updateModalToDo,
+        inputErrors,
+        closeTodoModal,
+        setToDoComplete,
+        modalTodo,
+        saveTodo,
+        editToDoModalOpen,
+        filterInputErrors,
       }}
     >
       {children}
