@@ -1,17 +1,20 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Todo } from "../types/todo";
 import type { SettingsType } from "../types/settings";
-import { loadFromStorage, setToStorage } from "../utils/getFromLocalStorage";
+import { loadFromStorage, setToStorage } from "../utils/localStorage";
 import { sortTodosList } from "../utils/sortTodosList";
 import { searchFilterTodos } from "../utils/searchFilterTodos";
 import { validateTodo } from "../utils/validateTodo";
 import { reviveTodoDates } from "../utils/reviveTodoDates";
+import type { ModalStateType } from "../types/modalState";
 
 interface ToDoContextType {
   todos: Todo[];
+  filteredTodos: Todo[];
   addTodo: (todo: Todo) => void;
   removeTodo: (id: string) => void;
   updateTodo: (updatedTodo: Todo) => void;
+  saveTodo: (todo: Todo, resetTodo: () => void) => void;
   clearTodos: () => void;
   addToDosettings: SettingsType;
   updateSettings: (settings: SettingsType) => void;
@@ -20,15 +23,13 @@ interface ToDoContextType {
   setToDoComplete: (id: string) => void;
   updateModalToDo: (todo: Todo, resetEditToDo: () => void) => void;
   modalTodo: Todo;
-  saveTodo: (todo: Todo, resetTodo: () => void) => void;
   editToDoModalOpen: (id: string) => void;
   filterInputErrors: (inputName: string) => void;
-  filteredTodos: Todo[];
   setSearchQuery: (searchQuery: string) => void;
   sortOption: string;
   setSortOption: (sortOption: string) => void;
-  modalState: "add" | "edit" | "settings" | "non";
-  setModalState: (state: "add" | "edit" | "settings" | "non") => void;
+  modalState: ModalStateType;
+  setModalState: (state: ModalStateType) => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
@@ -37,7 +38,7 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [todos, setTodos] = useState<Todo[]>(
     () => loadFromStorage<Todo[]>("todos", reviveTodoDates) || []
   );
-  const [modalState, setModalState] = useState<"add" | "edit" | "settings" | "non">("non");
+  const [modalState, setModalState] = useState<ModalStateType>("non");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOption, setSortOption] = useState<string>("non");
   const [modalTodo, setModalTodo] = useState<Todo>({
@@ -60,7 +61,6 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   );
   const [inputErrors, setInputErrors] = useState<string[]>([]);
-  // const debounce = useDebounce(searchFilterTodos, 300);
   const filteredTodos = useMemo(
     () => sortTodosList(searchFilterTodos(todos, searchQuery), sortOption),
     [todos, sortOption, searchQuery]
