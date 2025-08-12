@@ -1,15 +1,25 @@
-import type { Config } from "@jest/types";
+import type { Config } from "jest";
 
-const config: Config.InitialOptions = {
+const config: Config = {
+  preset: "ts-jest",
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ["<rootDir>/src/test/setupTests.ts"],
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
-  },
   moduleNameMapper: {
     "\\.(css|scss)$": "identity-obj-proxy",
-    "\\.(jpg|jpeg|png|gif|svg|webp|avif)$": "<rootDir>/src/test/fileMock.ts",
+  },
+  transform: {
+    "^.+\\.(ts|tsx)$": [
+      "@swc/jest",
+      {
+        jsc: {
+          transform: {
+            react: {
+              runtime: "automatic", // enables JSX without importing React
+            },
+          },
+        },
+      },
+    ],
   },
 };
 

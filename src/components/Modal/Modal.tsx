@@ -13,7 +13,7 @@ export const Modal = ({ children, onClose, onSave }: ModalProps) => {
     <div className="modalOverlay">
       <div className="modalContentWrapper" onClick={(e) => e.stopPropagation()}>
         {children}
-        <button className="modalClose" onClick={onClose}>
+        <button className="modalClose" onClick={onClose} aria-label="Close dialog">
           <RxCross2 size={34} color="#e77e73ff" />
         </button>
         <button onClick={onSave} className="settingsSave">

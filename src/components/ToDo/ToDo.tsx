@@ -33,17 +33,21 @@ export const ToDo = ({
         <p className={`todoText ${todo.completed ? "completed" : ""}`}>{todo.text}</p>
       </div>
       <div className="todoActions">
-        <button onClick={() => onEditIconClick(todo.id)} className="iconButton">
+        <button onClick={() => onEditIconClick(todo.id)} className="iconButton" aria-label="edit">
           <MdOutlineEdit size={28} color="#6e6e6eff" />
         </button>
-        <button onClick={() => setToDoComplete(todo.id)} className="iconButton">
+        <button
+          onClick={() => setToDoComplete(todo.id)}
+          className="iconButton"
+          aria-label="checkbox"
+        >
           {todo.completed ? (
             <MdCheckBox size={32} color="#a0c774ff" />
           ) : (
             <MdOutlineCheckBoxOutlineBlank size={32} color="rgb(110, 110, 110)" />
           )}
         </button>
-        <button onClick={() => removeTodo(todo.id)} className="iconButton">
+        <button onClick={() => removeTodo(todo.id)} className="iconButton" aria-label="delete">
           <FaRegTrashCan size={28} color="#6e6e6eff" />
         </button>
       </div>
