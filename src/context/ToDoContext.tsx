@@ -29,7 +29,6 @@ interface ToDoContextType {
   filterInputErrors: (inputName: string) => void;
   filteredTodos: Todo[];
   setSearchQuery: (searchQuery: string) => void;
-  searchQuery: string;
   sortOption: string;
   setSortOption: (sortOption: string) => void;
 }
@@ -68,8 +67,6 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     () => sortTodosList(searchFilterTodos(todos, searchQuery), sortOption),
     [todos, sortOption, searchQuery]
   );
-
-  console.log("Filtered Todos:", filteredTodos);
 
   useEffect(() => {
     setToStorage("todos", todos);
@@ -229,7 +226,6 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         editToDoModalOpen,
         filterInputErrors,
         filteredTodos,
-        searchQuery,
         setSearchQuery,
         sortOption,
         setSortOption,

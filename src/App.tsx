@@ -20,8 +20,6 @@ function App() {
     isSettingsModalOpen,
     isEditTodoModalOpen,
     editToDoModalOpen,
-    searchQuery,
-    sortOption,
   } = useToDoContext();
 
   const handleSettingsClick = () => {
@@ -35,9 +33,6 @@ function App() {
   const closeSettingsModal = () => {
     setIsSettingsModalOpen(false);
   };
-
-  console.log(searchQuery, "Search Query");
-  console.log(sortOption, "Sort Option");
 
   return (
     <div className="appContainer">

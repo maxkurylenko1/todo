@@ -32,8 +32,6 @@ export const ToDoModal = ({ modalTitle, isEditMode }: ToDoModalProps) => {
     isEditMode ? modalTodo : initialTodo
   );
 
-  console.log("Current ToDo:", currentToDo);
-
   const settings = isEditMode ? modalTodo.settings : addToDosettings;
 
   const handleChange = (
