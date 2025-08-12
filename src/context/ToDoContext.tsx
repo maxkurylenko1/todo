@@ -143,18 +143,13 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setModalState("non");
   };
 
-  const editToDoModalOpen = async (id: string) => {
+  const editToDoModalOpen = (id: string) => {
+    setModalState("edit");
     setModalTodo((prevState) => {
       const todoToEdit = todos.find((todo) => todo.id === id);
       return todoToEdit ? { ...todoToEdit } : prevState;
     });
   };
-
-  useEffect(() => {
-    if (modalTodo.id) {
-      setModalState("edit");
-    }
-  }, [modalTodo]);
 
   const filterInputErrors = (inputName: string) => {
     setInputErrors(inputErrors.filter((error) => error !== inputName));
