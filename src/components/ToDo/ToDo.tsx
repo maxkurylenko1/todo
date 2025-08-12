@@ -51,7 +51,15 @@ export const ToDo = ({
         Created at: {`${moment(todo.createdAt).format("MMM Do YYYY, h:mm a")}`}
       </p>
       {todo.dueDate && (
-        <p className="deadline">
+        <p
+          className={`deadline ${
+            todo.completed
+              ? "completed"
+              : moment(todo.dueDate).isBefore(new Date())
+              ? "overdue"
+              : ""
+          }`}
+        >
           Deadline: {`${moment(todo.dueDate).format("MMM Do YYYY, h:mm a")}`}
         </p>
       )}

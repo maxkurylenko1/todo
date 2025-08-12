@@ -5,10 +5,12 @@ import { AddToDo } from "./features/AddToDo/AddToDo";
 import { ToDoList } from "./features/ToDoList/ToDoList";
 import { useToDoContext } from "./context/ToDoContext";
 import { Settings } from "./features/Settings/Settings";
+import { SearchSortBar } from "./features/SearchSortBar/SearchSortBar";
 
 function App() {
   const {
     todos,
+    filteredTodos,
     saveTodo,
     removeTodo,
     updateTodo,
@@ -18,6 +20,8 @@ function App() {
     isSettingsModalOpen,
     isEditTodoModalOpen,
     editToDoModalOpen,
+    searchQuery,
+    sortOption,
   } = useToDoContext();
 
   const handleSettingsClick = () => {
@@ -31,6 +35,9 @@ function App() {
   const closeSettingsModal = () => {
     setIsSettingsModalOpen(false);
   };
+
+  console.log(searchQuery, "Search Query");
+  console.log(sortOption, "Sort Option");
 
   return (
     <div className="appContainer">
@@ -64,8 +71,9 @@ function App() {
             onSaveTodoClick={saveTodo}
             onAddTodoIconClick={handleAddTodoIconClick}
           />
+          {todos.length > 0 && <SearchSortBar />}
           <ToDoList
-            todos={todos}
+            todos={filteredTodos}
             handleRemoveTodo={removeTodo}
             handleUpdateTodo={updateTodo}
             editTodoIconClick={editToDoModalOpen}

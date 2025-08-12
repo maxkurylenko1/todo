@@ -81,7 +81,7 @@ export const ToDoModal = ({ modalTitle, isEditMode }: ToDoModalProps) => {
         <h2 className="modalTitle">{modalTitle}</h2>
         {settings.isTitleActive && (
           <div className="toDoTaskNameWrapper">
-            <p className="addToDoTitle">Task name:</p>
+            <p className="addToDoModalTitle">Task name:</p>
             <input
               type="text"
               value={currentToDo.title?.length ? currentToDo.title : ""}
@@ -107,6 +107,7 @@ export const ToDoModal = ({ modalTitle, isEditMode }: ToDoModalProps) => {
               <p>Deadline</p>
               <input
                 type="datetime-local"
+                min={new Date().toISOString().slice(0, 16)}
                 value={
                   currentToDo.dueDate
                     ? currentToDo.dueDate instanceof Date

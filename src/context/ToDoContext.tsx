@@ -1,7 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Todo } from "../types/todo";
 import type { SettingsType } from "../types/settings";
 import { loadFromStorage, setToStorage } from "../utils/getFromLocalStorage";
+import { sortTodosList } from "../utils/sortTodosList";
+import { searchFilterTodos } from "../utils/searchFilterTodos";
 
 interface ToDoContextType {
   todos: Todo[];
@@ -25,6 +27,11 @@ interface ToDoContextType {
   saveTodo: (todo: Todo, resetTodo: () => void) => void;
   editToDoModalOpen: (id: string) => void;
   filterInputErrors: (inputName: string) => void;
+  filteredTodos: Todo[];
+  setSearchQuery: (searchQuery: string) => void;
+  searchQuery: string;
+  sortOption: string;
+  setSortOption: (sortOption: string) => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
@@ -34,6 +41,8 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   const [isAddTodoModalOpen, setIsAddTodoModalOpen] = useState<boolean>(false);
   const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortOption, setSortOption] = useState<string>("non");
   const [modalTodo, setModalTodo] = useState<Todo>({
     id: "",
     text: "",
@@ -54,6 +63,13 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   );
   const [inputErrors, setInputErrors] = useState<string[]>([]);
+  // const debounce = useDebounce(searchFilterTodos, 300);
+  const filteredTodos = useMemo(
+    () => sortTodosList(searchFilterTodos(todos, searchQuery), sortOption),
+    [todos, sortOption, searchQuery]
+  );
+
+  console.log("Filtered Todos:", filteredTodos);
 
   useEffect(() => {
     setToStorage("todos", todos);
@@ -65,6 +81,8 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addTodo = (todo: Todo) => {
     setTodos((prevTodos) => [todo, ...prevTodos]);
+    setSortOption("non"); // Reset sort option when adding a new todo
+    setSearchQuery(""); // Reset search query when adding a new todo
   };
 
   const removeTodo = (id: string) => {
@@ -210,6 +228,11 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         saveTodo,
         editToDoModalOpen,
         filterInputErrors,
+        filteredTodos,
+        searchQuery,
+        setSearchQuery,
+        sortOption,
+        setSortOption,
       }}
     >
       {children}
