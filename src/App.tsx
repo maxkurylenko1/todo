@@ -14,24 +14,26 @@ function App() {
     saveTodo,
     removeTodo,
     updateTodo,
-    setIsAddTodoModalOpen,
-    setIsSettingsModalOpen,
-    isAddTodoModalOpen,
-    isSettingsModalOpen,
-    isEditTodoModalOpen,
+    modalState,
+    setModalState,
     editToDoModalOpen,
   } = useToDoContext();
 
   const handleSettingsClick = () => {
-    setIsSettingsModalOpen(true);
+    setModalState("settings");
   };
 
   const handleAddTodoIconClick = () => {
-    setIsAddTodoModalOpen(true);
+    setModalState("add");
   };
 
   const closeSettingsModal = () => {
-    setIsSettingsModalOpen(false);
+    setModalState("non");
+  };
+
+  const handleEditTodoIconClick = (id: string) => {
+    setModalState("edit");
+    editToDoModalOpen(id);
   };
 
   return (
@@ -60,9 +62,9 @@ function App() {
           />
         </header>
         <main className="appMain">
-          {isSettingsModalOpen && <Settings closeModal={closeSettingsModal} />}
+          {modalState === "settings" && <Settings closeModal={closeSettingsModal} />}
           <AddToDo
-            isAddTodoModalOpen={isAddTodoModalOpen}
+            isAddTodoModalOpen={modalState === "add"}
             onSaveTodoClick={saveTodo}
             onAddTodoIconClick={handleAddTodoIconClick}
           />
@@ -71,8 +73,8 @@ function App() {
             todos={filteredTodos}
             handleRemoveTodo={removeTodo}
             handleUpdateTodo={updateTodo}
-            editTodoIconClick={editToDoModalOpen}
-            isEditTodoModalOpen={isEditTodoModalOpen}
+            editTodoIconClick={handleEditTodoIconClick}
+            isEditTodoModalOpen={modalState === "edit"}
           />
         </main>
       </div>

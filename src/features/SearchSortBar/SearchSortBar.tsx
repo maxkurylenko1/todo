@@ -26,7 +26,6 @@ export const SearchSortBar = () => {
         type="text"
         className="searchInput"
         placeholder="Search todos..."
-        // value={searchQuery}
         onChange={handleSearchChange}
       />
       {sortOption !== "non" && <RxCross2 className="sortReset" size={15} onClick={sortReset} />}

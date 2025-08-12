@@ -18,7 +18,7 @@ export const ToDoList = ({
   handleRemoveTodo,
   editTodoIconClick,
 }: ToDoListProps): JSX.Element => {
-  const { setToDoComplete, isEditTodoModalOpen } = useToDoContext();
+  const { setToDoComplete, modalState } = useToDoContext();
 
   return (
     <div className="todoList">
@@ -31,7 +31,7 @@ export const ToDoList = ({
           onEditIconClick={editTodoIconClick}
         />
       ))}
-      {isEditTodoModalOpen && <ToDoModal modalTitle={"Edit ToDo"} isEditMode={true}></ToDoModal>}
+      {modalState === "edit" && <ToDoModal modalTitle={"Edit ToDo"} isEditMode={true}></ToDoModal>}
     </div>
   );
 };

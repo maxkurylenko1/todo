@@ -4,6 +4,7 @@ import type { SettingsType } from "../types/settings";
 import { loadFromStorage, setToStorage } from "../utils/getFromLocalStorage";
 import { sortTodosList } from "../utils/sortTodosList";
 import { searchFilterTodos } from "../utils/searchFilterTodos";
+import { validateTodo } from "../utils/validateTodo";
 
 interface ToDoContextType {
   todos: Todo[];
@@ -11,14 +12,8 @@ interface ToDoContextType {
   removeTodo: (id: string) => void;
   updateTodo: (updatedTodo: Todo) => void;
   clearTodos: () => void;
-  isSettingsModalOpen: boolean;
-  isAddTodoModalOpen: boolean;
-  setIsSettingsModalOpen: (isOpen: boolean) => void;
-  setIsAddTodoModalOpen: (isOpen: boolean) => void;
   addToDosettings: SettingsType;
   updateSettings: (settings: SettingsType) => void;
-  isEditTodoModalOpen: boolean;
-  setIsEditTodoModalOpen: (isModalOpen: boolean) => void;
   inputErrors: string[];
   closeTodoModal: (resetToDo: () => void, isEditMode: boolean) => void;
   setToDoComplete: (id: string) => void;
@@ -31,15 +26,15 @@ interface ToDoContextType {
   setSearchQuery: (searchQuery: string) => void;
   sortOption: string;
   setSortOption: (sortOption: string) => void;
+  modalState: "add" | "edit" | "settings" | "non";
+  setModalState: (state: "add" | "edit" | "settings" | "non") => void;
 }
 
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
 
 export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>(() => loadFromStorage<Todo[]>("todos") || []);
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
-  const [isAddTodoModalOpen, setIsAddTodoModalOpen] = useState<boolean>(false);
-  const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<"add" | "edit" | "settings" | "non">("non");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOption, setSortOption] = useState<string>("non");
   const [modalTodo, setModalTodo] = useState<Todo>({
@@ -101,12 +96,8 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAddToDosettings(settings);
   };
 
-  const closeTodoModal = (resetToDo: () => void, isEditMode: boolean) => {
-    if (isEditMode) {
-      setIsEditTodoModalOpen(false);
-    } else {
-      setIsAddTodoModalOpen(false);
-    }
+  const closeTodoModal = (resetToDo: () => void) => {
+    setModalState("non");
     resetToDo();
     setInputErrors([]); // Clear input errors when closing the modal
   };
@@ -118,23 +109,7 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateModalToDo = (todo: Todo, resetToDo: () => void) => {
-    const errors: string[] = [];
-
-    if (todo.settings.isTitleActive && !todo.title?.trim()) {
-      errors.push("title");
-    }
-
-    if (!todo.text.trim()) {
-      errors.push("text");
-    }
-
-    if (todo.settings.isDueDateActive && !todo.dueDate) {
-      errors.push("dueDate");
-    }
-
-    if (todo.settings.isPriorityActive && !todo.priority) {
-      errors.push("priority");
-    }
+    const errors: string[] = validateTodo(todo);
 
     if (errors.length > 0) {
       setInputErrors(errors);
@@ -144,27 +119,11 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateTodo(todo);
     resetToDo();
     setInputErrors([]);
-    setIsEditTodoModalOpen(false);
+    setModalState("non");
   };
 
   const saveTodo = (todo: Todo, resetTodo: () => void) => {
-    const errors: string[] = [];
-
-    if (todo.settings.isTitleActive && !todo.title?.trim()) {
-      errors.push("title");
-    }
-
-    if (!todo.text.trim()) {
-      errors.push("text");
-    }
-
-    if (todo.settings.isDueDateActive && !todo.dueDate) {
-      errors.push("dueDate");
-    }
-
-    if (todo.settings.isPriorityActive && !todo.priority) {
-      errors.push("priority");
-    }
+    const errors: string[] = validateTodo(todo);
 
     if (errors.length > 0) {
       setInputErrors(errors);
@@ -181,7 +140,7 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     addTodo(newTodo);
     resetTodo(); // Reset the current todo state
     setInputErrors([]); // Clear input errors after saving
-    setIsAddTodoModalOpen(false);
+    setModalState("non");
   };
 
   const editToDoModalOpen = async (id: string) => {
@@ -193,7 +152,7 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (modalTodo.id) {
-      setIsEditTodoModalOpen(true);
+      setModalState("edit");
     }
   }, [modalTodo]);
 
@@ -209,14 +168,8 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         removeTodo,
         updateTodo,
         clearTodos,
-        isSettingsModalOpen,
-        isAddTodoModalOpen,
-        setIsSettingsModalOpen,
-        setIsAddTodoModalOpen,
         addToDosettings,
         updateSettings,
-        isEditTodoModalOpen,
-        setIsEditTodoModalOpen,
         updateModalToDo,
         inputErrors,
         closeTodoModal,
@@ -229,6 +182,8 @@ export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSearchQuery,
         sortOption,
         setSortOption,
+        modalState,
+        setModalState,
       }}
     >
       {children}
