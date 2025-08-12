@@ -1,14 +1,13 @@
-export const loadFromStorage = <T>(key: string): T | null => {
+export const loadFromStorage = <T>(key: string, reviver?: (raw: unknown) => T | null): T | null => {
   const item = localStorage.getItem(key);
-  if (item) {
-    try {
-      return JSON.parse(item);
-    } catch (error) {
-      console.error(`Error parsing JSON from localStorage for key "${key}":`, error);
-      return null;
-    }
+  if (!item) return null;
+  try {
+    const parsed = JSON.parse(item);
+    return reviver ? reviver(parsed) : (parsed as T);
+  } catch (error) {
+    console.error(`Error parsing JSON from localStorage for key "${key}":`, error);
+    return null;
   }
-  return null;
 };
 
 export const setToStorage = <T>(key: string, value: T): void => {

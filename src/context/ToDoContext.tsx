@@ -5,6 +5,7 @@ import { loadFromStorage, setToStorage } from "../utils/getFromLocalStorage";
 import { sortTodosList } from "../utils/sortTodosList";
 import { searchFilterTodos } from "../utils/searchFilterTodos";
 import { validateTodo } from "../utils/validateTodo";
+import { reviveTodoDates } from "../utils/reviveTodoDates";
 
 interface ToDoContextType {
   todos: Todo[];
@@ -33,7 +34,9 @@ interface ToDoContextType {
 const ToDoContext = createContext<ToDoContextType | undefined>(undefined);
 
 export const ToDoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [todos, setTodos] = useState<Todo[]>(() => loadFromStorage<Todo[]>("todos") || []);
+  const [todos, setTodos] = useState<Todo[]>(
+    () => loadFromStorage<Todo[]>("todos", reviveTodoDates) || []
+  );
   const [modalState, setModalState] = useState<"add" | "edit" | "settings" | "non">("non");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOption, setSortOption] = useState<string>("non");
