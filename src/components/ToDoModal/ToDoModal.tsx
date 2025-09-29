@@ -106,7 +106,13 @@ export const ToDoModal = ({ modalTitle, isEditMode }: ToDoModalProps) => {
               <input
                 type="datetime-local"
                 min={new Date().toISOString().slice(0, 16)}
-                value={currentToDo.dueDate ? currentToDo.dueDate.toISOString().slice(0, 16) : ""}
+                value={
+                  currentToDo.dueDate
+                    ? typeof currentToDo.dueDate === "string"
+                      ? currentToDo.dueDate
+                      : (currentToDo.dueDate as Date).toISOString().slice(0, 16)
+                    : ""
+                }
                 name="dueDate"
                 className={`toDoInput ${inputErrors.includes("dueDate") ? "required" : ""}`}
                 onChange={handleChange}
