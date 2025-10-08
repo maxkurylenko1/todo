@@ -3,6 +3,7 @@
 A simple **React + TypeScript + Vite** ToDo application with Context API for state management.  
 This project is meant to demonstrate clean project setup, modular code, and modern tooling.
 
+Deployed on https://maxkurylenko1.github.io/todo/
 ---
 
 ## 🚀 Tech Stack
